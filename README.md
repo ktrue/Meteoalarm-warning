@@ -5,7 +5,7 @@ This script will read and cache a weather awareness warning from [**www.meteoala
 
 ![METEOalarm countries](./meteoalarm-coverage-area.png)
 
-As a standalone script, it can be configured to display the warning in any one of the supported languages of the member countries. When used within the [**AJAX/PHP Base-World template**](https://saratoga-weather.org/wxtemplates/index.php), the language for the template set will be automatically selected. Please note that the translations for the contents are provided by www.meteoalarm.org , and no additional translation is done by the World-ML template set..
+As a standalone script, it can be configured to display the warning in any one of the supported languages of the member countries. When used within the [**AJAX/PHP Base-World template**](https://saratoga-weather.org/wxtemplates/index.php), the language for the template set will be automatically selected. Please note that the translations for the contents are provided by [**www.meteoalarm.org**](https://www.meteoalarm.org/), and no additional translation is done by the Base-World template set..
 
 Settings in the file for non-template use are:
 
