@@ -31,6 +31,7 @@
 # Version 3.11 - 19-May-2022 - add $minAlertLevel / $SITE['EUAminLevel'] feature to control display of alerts
 # Version 3.12 - 20-Jun-2022 - compact the meteoalarm-summary.html table
 # Version 3.13 - 21-Jun-2022 - center and align alert summary to ajax-dashboard in wide/narrow aspect
+# Version 3.14 - 01-Jul-2022 - fix for partial display of alert summary/detail boxes for alerts < $minAlertLevel
 #
 # error_reporting(E_ALL); # uncomment for error checking
 #
@@ -100,7 +101,7 @@ $minAlertLevel = 2; # 1=green, 2=yellow, 3=orange, 4=red - warnings below this w
 #-------------------------------------------------------------------------------------------------
 #
 # please don't change these
-$EUAversion = 'get-meteoalarm-warning-inc.php - V3.13 - 21-Jun-2022';
+$EUAversion = 'get-meteoalarm-warning-inc.php - V3.14 - 01-Jul-2022';
 $cache_max_age = 300;
 $detail_page = true;
 $detail_page_url = './wxadvisory.php';
@@ -497,6 +498,7 @@ else {
   $warns = unserialize(file_get_contents("$warn_cache"));
 	$Status = "Loaded warning data from '$warn_cache'. Updated:". 
 	   date($dateFormat.' '.$timeFormatShort,filemtime("$warn_cache")) . PHP_EOL;
+
 }
 #echo __LINE__.print_r($warns,true);  exit;
 $max_color = 0;
@@ -507,30 +509,6 @@ $cln_vnt = '';
 $nr = $wrnng = 0;
 $languages = array();
 $count = count($warns);
-if ($count == 0) {
-	$ownpagehtml = "<!-- get-meteoalarm-warning-inc: begin $warn_details -->".PHP_EOL;
-	$ownpagehtml .= '<div align="center" class="advisoryBox" style="background-color: #29d660; width: 625px;margin: 0 auto !important;">'.PHP_EOL;
-	$ownpagehtml .= '<!-- Fetch Status:'.PHP_EOL.$Status.PHP_EOL.' -->'.PHP_EOL;
-	$ownpagehtml .= langtransstr('No current alerts for').': "'.format_emmaids($alarm_area).'".'.PHP_EOL;
-	$ownpagehtml .= "</div><!--  get-meteoalarm-warning-inc: end  $warn_details -->".PHP_EOL;
-	if (file_put_contents($warn_details,$ownpagehtml.PHP_EOL)) {
-		print "<!-- get-meteoalarm-warning-inc: saved details to $warn_details file -->".PHP_EOL;
-	} else {
-		print "<!-- get-meteoalarm-warning-inc: unable to save details to $warn_details -->".PHP_EOL;
-	}
-	$ownpagehtml = "<!-- get-meteoalarm-warning-inc: begin $warn_summary -->".PHP_EOL;
-	$ownpagehtml .= '<div align="center" class="advisoryBox" style="background-color: #29d660; width: 625px;margin: 0 auto !important;">'.PHP_EOL;
-	$ownpagehtml .= '<!-- Fetch Status:'.PHP_EOL.$Status.PHP_EOL.' -->'.PHP_EOL;
-	$ownpagehtml .= langtransstr('No current alerts for').': "'.format_emmaids($alarm_area).'".'.PHP_EOL;
-	$ownpagehtml .= "</div><!--  get-meteoalarm-warning-inc: end  $warn_summary -->".PHP_EOL;
-	if (file_put_contents($warn_summary,$ownpagehtml.PHP_EOL)) {
-		print "<!-- get-meteoalarm-warning-inc: saved summary to $warn_summary file -->".PHP_EOL;
-	} else {
-		print "<!-- get-meteoalarm-warning-inc: unable to save summary to $warn_summary -->".PHP_EOL;
-	}
-	
-  return false;
-}
 $AnchorCount = 0;
 
 foreach ($warns as $warncode => $warn) {
@@ -582,7 +560,7 @@ foreach ($warns as $warncode => $warn) {
 		continue; # skip the alert
 	}
   if ($level < 1 || $level > 4) {
-    $level = 2;
+    continue; # skip the alert
   }
   $severity = $warnlevels[$level];
   if ($level > $max_color) {
@@ -788,6 +766,31 @@ $wrnStrings .= $wrnHref . '<img src="'.str_replace('##','info',$image_url_protot
 </div>
 </div>';
 */
+if (count($CountryWarnings) < 1) {
+	$ownpagehtml = "<!-- get-meteoalarm-warning-inc: begin $warn_details -->".PHP_EOL;
+	$ownpagehtml .= '<div align="center" class="advisoryBox" style="background-color: #29d660; width: 625px;margin: 0 auto !important;">'.PHP_EOL;
+	$ownpagehtml .= '<!-- Fetch Status:'.PHP_EOL.$Status.PHP_EOL.' -->'.PHP_EOL;
+	$ownpagehtml .= langtransstr('No current alerts for').': "'.format_emmaids($alarm_area).'".'.PHP_EOL;
+	$ownpagehtml .= "</div><!--  get-meteoalarm-warning-inc: end  $warn_details -->".PHP_EOL;
+	if (file_put_contents($warn_details,$ownpagehtml.PHP_EOL)) {
+		print "<!-- get-meteoalarm-warning-inc: saved details to $warn_details file -->".PHP_EOL;
+	} else {
+		print "<!-- get-meteoalarm-warning-inc: unable to save details to $warn_details -->".PHP_EOL;
+	}
+	$ownpagehtml = "<!-- get-meteoalarm-warning-inc: begin $warn_summary -->".PHP_EOL;
+	$ownpagehtml .= '<div align="center" class="advisoryBox" style="background-color: #29d660; width: 625px;margin: 0 auto !important;">'.PHP_EOL;
+	$ownpagehtml .= '<!-- Fetch Status:'.PHP_EOL.$Status.PHP_EOL.' -->'.PHP_EOL;
+	$ownpagehtml .= langtransstr('No current alerts for').': "'.format_emmaids($alarm_area).'".'.PHP_EOL;
+	$ownpagehtml .= "</div><!--  get-meteoalarm-warning-inc: end  $warn_summary -->".PHP_EOL;
+	if (file_put_contents($warn_summary,$ownpagehtml.PHP_EOL)) {
+		print "<!-- get-meteoalarm-warning-inc: saved summary to $warn_summary file -->".PHP_EOL;
+	} else {
+		print "<!-- get-meteoalarm-warning-inc: unable to save summary to $warn_summary -->".PHP_EOL;
+	}
+	
+  return false;
+}
+
 # new Summary warnings to be saved with links to $warn_summary
 $wrnStrings =  "<!-- get-meteoalarm-warning-inc: begin summary $warn_summary -->".PHP_EOL;
 $wrnStrings .= '<div align="center" class="advisoryBox" style="text-align: left;background-color: lightyellow; width: 625px;margin: 0 auto !important;">'.PHP_EOL;
