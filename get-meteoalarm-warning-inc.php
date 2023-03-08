@@ -32,6 +32,8 @@
 # Version 3.12 - 20-Jun-2022 - compact the meteoalarm-summary.html table
 # Version 3.13 - 21-Jun-2022 - center and align alert summary to ajax-dashboard in wide/narrow aspect
 # Version 3.14 - 01-Jul-2022 - fix for partial display of alert summary/detail boxes for alerts < $minAlertLevel
+# Version 3.15 - 04-Nov-2022 - improved formatting for 'No Alerts' area
+# Version 3.16 - 08-Mar-2023 - fix for changed API URL and increased timeout to 30 seconds
 #
 # error_reporting(E_ALL); # uncomment for error checking
 #
@@ -101,7 +103,7 @@ $minAlertLevel = 2; # 1=green, 2=yellow, 3=orange, 4=red - warnings below this w
 #-------------------------------------------------------------------------------------------------
 #
 # please don't change these
-$EUAversion = 'get-meteoalarm-warning-inc.php - V3.14 - 01-Jul-2022';
+$EUAversion = 'get-meteoalarm-warning-inc.php - V3.16 - 08-Mar-2023';
 $cache_max_age = 300;
 $detail_page = true;
 $detail_page_url = './wxadvisory.php';
@@ -377,7 +379,7 @@ if ($cache_age > $cache_max_age) {
   $now = time();
   foreach ($cntrs as $country) #----- / country
   {
-    $warn_url = 'https://hub.meteoalarm.org/api/v1/stream-buffers/feeds-' . $countries[$country] . '/warnings?include_geocodes=0&exclude_severity_minor=1'; # echo $warn_url; exit;
+    $warn_url = 'https://feeds.meteoalarm.org/api/v1/warnings/feeds-' . $countries[$country]; # echo $warn_url; exit;
     $fl_to_load = $country . '_warnings'; #echo __LINE__.' "$warn_cache"='."$warn_cache".'  $warn_url='.$warn_url; exit;
     $load = warn_curl();
     if ($load === false) {
@@ -918,12 +920,14 @@ function format_emmaids($alert_area) {
 	foreach ($areas as $i => $code) {
 		if(empty($code)) { continue; }
 		if(isset($codenames[$code])) {
-			$out[] = $codenames[$code].'('.$code.')';
+			$t = str_replace(' ','&nbsp;',$codenames[$code]);
+			$out[] = $t.'&nbsp;('.$code.')';
 		} else {
-			$out[] = langtrans('Name not available for').'('.$code.')';
+			$t = str_replace(' ','&nbsp;',langtrans('Name not available for'));
+			$out[] = $t.'&nbsp;('.$code.')';
 		}
 	}
-	$output = join(', ',$out);
+	$output = join('; ',$out);
 	return $output;
 }
 #------------------------------------------------------------------
@@ -942,8 +946,8 @@ function warn_curl() {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // connection timeout
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // data timeout
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30); // connection timeout
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30); // data timeout
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:12.0) Gecko/20120424 Firefox/12.0');
     $result = curl_exec($ch);
     $info = curl_getinfo($ch);
