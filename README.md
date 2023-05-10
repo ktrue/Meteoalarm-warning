@@ -61,9 +61,9 @@ Include the following text on your page to display the output:
 <?php
 include_once("get-meteoalarm-warning-inc.php");
 # for details use:
-  if(file_exists('$warn_details')) { readfile('$warn_details'); }
+  if(file_exists($warn_details)) { readfile($warn_details); }
 # for summary use:        
-  if(file_exists('$warn_summary')) { readfile('$warn_summary'); }
+  if(file_exists($warn_summary)) { readfile($warn_summary); }
 ?>
 ```
 
