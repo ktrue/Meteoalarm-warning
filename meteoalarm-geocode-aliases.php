@@ -1,9 +1,11 @@
 <?php
 # generated from geocode-aliases.csv by make-meteoalarm-alias-data.php
 # Author: Ken True - webmaster@saratoga-weather.org
-# Generated: Sat, 14 May 2022 07:42:56 -0700
+# Generated: Thu, 19 Oct 2023 11:50:10 -0700
 #
 # Version 1.00 - 14-May-2022 - initial release for get-meteoalarm-warning-inc V3.00
+# Version 1.01 - 24-Apr-2023 - updates from meteoalarm.org
+# Version 1.02 - 19-Oct-2023 - updates from meteoalarm.org
 #
 $aliases = array (
   'AN|FIPS' => 'FR001',
@@ -540,10 +542,13 @@ $aliases = array (
   'FI041|NUTS3' => 'FI041',
   'FI042|NUTS3' => 'FI042',
   'FI043|NUTS3' => 'FI043',
-  'FR101|NUTS3' => 'FR067',
+  'FR101|NUTS3' => 'FR101',
   'FR102|NUTS3' => 'FR068',
   'FR103|NUTS3' => 'FR064',
   'FR104|NUTS3' => 'FR066',
+  'FR105|NUTS3' => 'FR105',
+  'FR106|NUTS3' => 'FR106',
+  'FR107|NUTS3' => 'FR107',
   'FR108|NUTS3' => 'FR065',
   'FR211|NUTS3' => 'FR074',
   'FR212|NUTS3' => 'FR075',
@@ -658,13 +663,13 @@ $aliases = array (
   'LV009|NUTS3' => 'LV003',
   'ME000|NUTS3' => 'ME001',
   'MK001|NUTS3' => 'MK001',
-  'MK002|NUTS3' => 'MK001',
+  'MK002|NUTS3' => 'MK002',
   'MK003|NUTS3' => 'MK003',
-  'MK004|NUTS3' => 'MK006',
-  'MK005|NUTS3' => 'MK003',
-  'MK006|NUTS3' => 'MK005',
-  'MK007|NUTS3' => 'MK001',
-  'MK008|NUTS3' => 'MK001',
+  'MK004|NUTS3' => 'MK004',
+  'MK005|NUTS3' => 'MK005',
+  'MK006|NUTS3' => 'MK006',
+  'MK007|NUTS3' => 'MK007',
+  'MK008|NUTS3' => 'MK008',
   'NL113|NUTS3' => 'NL019',
   'NL11|NUTS2' => 'NL007',
   'NL121|NUTS3' => 'NL019',
